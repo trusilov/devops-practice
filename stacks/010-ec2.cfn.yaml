@@ -2,9 +2,88 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: EC2 instances
 
 Parameters:
-
-
-
+  KeyName:
+    Description: The key name.
+    Type: String
+    Default: trusilov.sich #  hardcoded because I can :))
+  InstanceType:
+    Description: The type of EC2 Instance.
+    Type: String
+    Default: t2.micro
+  SSHConnect:
+    Description: cidr block
+    Type: String
+    MinLength: 9
+    MaxLength: 18
+    Default: 0.0.0.0/0
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+  AmiId:
+    Type: AWS::EC2::Image::Id
+    Default: 'ami-065deacbcaac64cf2'
+  VpcId:
+    Type: String
+    Default: 'vpc-02cdef5aa29156548' #  hardcoded again (:
 
 
 Resources:
+
+  FirstEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !GetAtt EC2SecurityGroup.GroupId
+      KeyName: !Ref KeyName
+      ImageId: !Ref AmiId
+
+  SecondEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !GetAtt EC2SecurityGroup.GroupId
+      KeyName: !Ref KeyName
+      ImageId: !Ref AmiId
+
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref SSHConnect
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      VpcId: !Ref VpcId
+
+
+Outputs:
+  FirstInstanceId:
+    Description: InstanceId of the newly created EC2 instance
+    Value: !Ref FirstEC2Instance
+  FirstEC2InstanceAZ:
+    Description: Availability Zone of the newly created EC2 instance
+    Value: !GetAtt FirstEC2Instance.AvailabilityZone
+  FirstEC2InstancePublicDNS:
+    Description: Public DNSName of the newly created EC2 instance
+    Value: !GetAtt FirstEC2Instance.PublicDnsName
+  FirstEC2InstancePublicIP:
+    Description: Public IP address of the newly created EC2 instance
+    Value: !GetAtt FirstEC2Instance.PublicIp
+  SecondInstanceId:
+    Description: InstanceId of the newly created EC2 instance
+    Value: !Ref SecondEC2Instance
+  SecondEC2InstanceAZ:
+    Description: Availability Zone of the newly created EC2 instance
+    Value: !GetAtt SecondEC2Instance.AvailabilityZone
+  SecondEC2InstancePublicDNS:
+    Description: Public DNSName of the newly created EC2 instance
+    Value: !GetAtt SecondEC2Instance.PublicDnsName
+  SecondEC2InstancePublicIP:
+    Description: Public IP address of the newly created EC2 instance
+    Value: !GetAtt SecondEC2Instance.PublicIp
