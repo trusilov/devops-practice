@@ -35,6 +35,12 @@ Resources:
         - !GetAtt EC2SecurityGroup.GroupId
       KeyName: !Ref KeyName
       ImageId: !Ref AmiId
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          cd home/ubuntu
+          git clone https://github.com/trusilov/fast-install-cheatsheet.git
+          sudo ./fast-install-cheatsheet/scripts/001-install-docker.sh
 
   SecondEC2Instance:
     Type: AWS::EC2::Instance
@@ -44,6 +50,12 @@ Resources:
         - !GetAtt EC2SecurityGroup.GroupId
       KeyName: !Ref KeyName
       ImageId: !Ref AmiId
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          cd home/ubuntu
+          git clone https://github.com/trusilov/fast-install-cheatsheet.git
+          sudo ./fast-install-cheatsheet/scripts/001-install-docker.sh
 
   EC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -54,10 +66,18 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: !Ref SSHConnect
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
           CidrIp: 0.0.0.0/0
       VpcId: !Ref VpcId
 
