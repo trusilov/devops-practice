@@ -24,7 +24,6 @@ Parameters:
     Type: String
     Default: 'vpc-02cdef5aa29156548' #  hardcoded again (:
 
-
 Resources:
 
   FirstEC2Instance:
