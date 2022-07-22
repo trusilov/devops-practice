@@ -1,7 +1,12 @@
+
 #!/bin/bash
 
-cd home/ubuntu
-git clone https://github.com/trusilov/fast-install-cheatsheet.git
-sudo ./fast-install-cheatsheet/scripts/001-install-docker.sh -y
-
-sudo chmod 666 /var/run/docker.sock
+sudo yum update –y
+sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+sudo yum upgrade -y
+sudo yum install jenkins java-1.8.0-openjdk-devel -y
+sudo systemctl daemon-reload
+sudo systemctl start jenkins
+sudo systemctl status jenkins
