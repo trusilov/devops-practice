@@ -35,6 +35,7 @@ resource "aws_instance" "UbuntuEC2" {
   instance_type = var.instance_type
   key_name      = var.key_name
   vpc_security_group_ids = [aws_security_group.EC2_SG.id]
+  user_data     = "${file("UserData/init_settings.sh")}"
 
   tags = {
     Name = "UbuntuEC2"
