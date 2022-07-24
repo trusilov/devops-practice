@@ -1,0 +1,9 @@
+---
+- name: Test Connection to instances
+  hosts: all
+  become: yes
+
+  tasks:
+
+  - name: Ping connection
+    ping: 
