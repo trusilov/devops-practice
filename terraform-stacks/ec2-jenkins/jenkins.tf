@@ -41,8 +41,9 @@ resource "aws_instance" "Jenkins" {
   }
 }
 
+
 resource "aws_security_group" "Jenkins_SG" {
-  name        = "Security Group in default VPC"
+  name        = "Jenkins Security Group"
   description = "Simple SG with SSH connection for EC2 in default VPC"
 
   ingress {
